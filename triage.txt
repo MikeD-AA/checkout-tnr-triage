@@ -1,0 +1,26 @@
+UNFILLED TEMPLATE - NOT AN ACTUAL ESCALATION
+Replace placeholders with reviewed values before treating this as a record.
+
+======================================================================
+Entry ID: <TRIAGE-0001>
+Triaged at: <ISO 8601 timestamp with time zone>
+Source type: <Email | Teams>
+Source reference: <Link or identifying reference | Not provided>
+Summary: <Brief description of the reported issue>
+Channel: <Booking | Change | Change Res | View Res | Unknown>
+Offers: <Comma-separated applicable offers | Unknown | Explicitly none>
+Allowed offers: Instant Upsell, Bags, Seats, Priority, Mileage Multiplier
+
+INFCODE: <Exact values | Not provided | Explicitly none>
+WRNCODE: <Exact values | Not provided | Explicitly none>
+
+ERRCODE details (repeat this block for each distinct ERRCODE):
+ERRCODE: <Exact value | Not provided | Explicitly none>
+Occurrence stage: <Checkout | T&R | Both | Unknown>
+Cause of ERRCODE: <Source-supported cause | Unknown - not provided>
+Cause status: <Confirmed | Suspected | Unknown>
+Evidence: <Source excerpts supporting code, stage, and cause | Not provided>
+
+Follow-up questions: <Unresolved details to confirm | None>
+Updates: <Dated additions or corrections | None>
+======================================================================
