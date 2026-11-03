@@ -239,13 +239,26 @@ is missing or ambiguous, ask for clarification rather than guessing.
 
 Use one row per distinct transaction. Check existing rows using Cart ID and
 transaction date, with PNR as corroborating evidence; do not match on PNR alone.
-Update a uniquely matching transaction or append a new row when none matches.
+Update a uniquely matching transaction or insert a new row when none matches.
 If multiple rows or transactions cannot be distinguished, ask before writing.
 Preserve unrelated cells, formulas, formatting, and existing evidence. Do not
 overwrite populated values with missing evidence. Write supplied identifiers
 and diagnostic text as literal cell values, never executable formulas.
 
-Read back the written cells to verify the mapped values persisted. Report the
+Keep **Master** in ascending transaction-date order (oldest to newest), not
+triage-date order. Read the existing transaction dates before choosing the
+insertion point. Insert an earlier transaction before the first later-dated
+entry, after existing entries with the same date; append only when no later
+entry exists. Insert a complete table/worksheet row so every record's columns
+remain aligned; never sort or shift only the date column. If correcting an
+existing transaction date changes its position, move the complete record to
+the proper position while preserving its other values and formulas. If dates
+are missing or ambiguous, the existing order is inconsistent, or the tool
+cannot safely insert/move a complete row, report the blocker and ask before
+writing rather than appending out of order or re-sorting unrelated records.
+
+Read back the written cells and neighboring transaction dates to verify the
+mapped values persisted and chronological order was retained. Report the
 workbook, worksheet, and affected row after verification, without repeating
 the PNR in chat. This spreadsheet step does not authorize appending an
 unreviewed entry to `triage.txt`.

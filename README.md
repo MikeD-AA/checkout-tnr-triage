@@ -23,7 +23,10 @@ For investigations using the
 record completed analysis in the **Master** worksheet of **ERRCODE858
 Triage_Updated 100626**, following the skill's post-analysis spreadsheet mapping.
 Map existing column titles rather than relying on column letters, preserve
-existing records, and verify persisted values. When an available workbook or
+existing records, and verify persisted values. Keep **Master** in ascending
+transaction-date order (oldest to newest): insert earlier transactions in their
+chronological position rather than appending them, keeping complete rows aligned.
+When an available workbook or
 browser tool requires sign-in, prompt the user to sign in directly and confirm
 readiness, preferably after analysis. Never collect credentials or session
 tokens. Verify tool access after sign-in; if unavailable, return proposed values
