@@ -1,7 +1,8 @@
 # checkout-tnr-triage
 
 Manual triage of escalations selected from email or Teams. The output is a
-plain-text record in [triage.txt](triage.txt); no tracker or automation is required.
+plain-text record in [triage.txt](triage.txt), with a post-analysis spreadsheet
+update when authorized workbook access is available.
 
 ## Workflow
 
@@ -16,6 +17,17 @@ plain-text record in [triage.txt](triage.txt); no tracker or automation is requi
 	leave unresolved details explicitly marked and list follow-up questions.
 5. Append the reviewed entry to `triage.txt`, using its template for each escalation.
 	Keep related updates under the same entry ID. Do not overwrite earlier entries.
+
+For investigations using the
+[checkout issue triage skill](.github/skills/checkout-issue-triage/SKILL.md),
+record completed analysis in the **Master** worksheet of **ERRCODE858
+Triage_Updated 100626**, following the skill's post-analysis spreadsheet mapping.
+Map existing column titles rather than relying on column letters, preserve
+existing records, and verify persisted values. When an available workbook or
+browser tool requires sign-in, prompt the user to sign in directly and confirm
+readiness, preferably after analysis. Never collect credentials or session
+tokens. Verify tool access after sign-in; if unavailable, return proposed values
+and report the blocker rather than claiming an update.
 
 ## Required Fields
 

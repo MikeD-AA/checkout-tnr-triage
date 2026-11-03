@@ -9,7 +9,8 @@ Investigate a GitHub issue using its supplied details and any authorized,
 server-side system integrations available in the execution environment. Return
 an evidence-backed report; do not infer a root cause from an error code alone.
 Do not depend on the user's browser session or ask them to sign in to a system
-for the investigation.
+for the investigation. The post-analysis workbook update has a separate,
+user-assisted sign-in procedure below; it is not required for log analysis.
 
 ## Inputs
 
@@ -198,3 +199,53 @@ codes verbatim, use `Not provided` for missing codes and `Explicitly none` only
 when the source says none occurred, and associate each ERRCODE with its cause,
 status, evidence, and stage. Return the proposed entry for review; do not append
 it to `triage.txt` until the user has reviewed and approved it.
+
+## Post-analysis spreadsheet update
+
+After completing the analysis, record the findings in the **Master** worksheet
+of **ERRCODE858 Triage_Updated 100626**:
+[SharePoint workbook](https://spteam.aa.com/sites/SBCheckOut/_layouts/15/Doc.aspx?sourcedoc=%7B043af682-6814-464d-8d71-b81f5322b38a%7D&action=edit).
+
+Use an authorized workbook integration or an available browser automation tool.
+A link alone does not grant access. If workbook sign-in is required, use
+`ask_user` to prompt the user to sign in directly to the workbook and confirm
+when ready. Prefer prompting after analysis, before writing; if prompted during
+triage, do not make workbook access a prerequisite for the analysis.
+
+The user must enter credentials and complete MFA themselves in the browser.
+Never request credentials in chat or extract cookies, tokens, or other session
+material. After confirmation, check that the available tool can actually access
+the intended workbook and **Master** worksheet; signing in to an unrelated
+browser does not grant a tool access automatically.
+
+If no suitable tool is available or a read/write fails, report the blocker and
+return the proposed field values instead; do not claim the spreadsheet was
+updated or prompt for a login that cannot enable the available tools.
+
+Read the worksheet headers and map fields by their titles, not hard-coded
+column letters. Confirm the actual header names before writing. If a header
+is missing or ambiguous, ask for clarification rather than guessing.
+
+| Field | Value |
+|---|---|
+| Transaction date | Evidence-backed transaction date, not the analysis date. Respect the worksheet's date format and establish the time zone before converting a timestamp near a date boundary. |
+| PNR | The supplied or verified PNR, preserved as text. This authorized workbook field is an exception to omitting the PNR from the chat report. |
+| Cart ID | The correlated Cart ID, preserved as text. |
+| Purchased | `Yes` for a confirmed purchase; `No` for confirmed non-purchase. An attempted purchase or error alone does not establish the final outcome. If unresolved, leave the value unset and explain in Copilot Review. |
+| Offers attempted to Purchase | Ancillaries selected for attempted purchase, not merely displayed offers. Leave blank when evidence establishes no ancillaries were selected; do not treat missing selection evidence as none. |
+| Notes | ERRCODE values verbatim, retaining existing notes when updating a row. |
+| Copilot Review | Concise findings: error sequence, cause/status, occurrence stage, purchase-outcome uncertainty, confidence, and outstanding checks. |
+| Logs | Supporting source links or log references and UTC timestamps. State unavailable or incomplete evidence explicitly; do not paste entire log payloads, secrets, or unnecessary personal data. |
+
+Use one row per distinct transaction. Check existing rows using Cart ID and
+transaction date, with PNR as corroborating evidence; do not match on PNR alone.
+Update a uniquely matching transaction or append a new row when none matches.
+If multiple rows or transactions cannot be distinguished, ask before writing.
+Preserve unrelated cells, formulas, formatting, and existing evidence. Do not
+overwrite populated values with missing evidence. Write supplied identifiers
+and diagnostic text as literal cell values, never executable formulas.
+
+Read back the written cells to verify the mapped values persisted. Report the
+workbook, worksheet, and affected row after verification, without repeating
+the PNR in chat. This spreadsheet step does not authorize appending an
+unreviewed entry to `triage.txt`.
