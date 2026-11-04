@@ -237,10 +237,17 @@ is missing or ambiguous, ask for clarification rather than guessing.
 | Copilot Review | Concise findings: error sequence, cause/status, occurrence stage, purchase-outcome uncertainty, confidence, and outstanding checks. |
 | Logs | Supporting source links or log references and UTC timestamps. State unavailable or incomplete evidence explicitly; do not paste entire log payloads, secrets, or unnecessary personal data. |
 
-Use one row per distinct transaction. Check existing rows using Cart ID and
-transaction date, with PNR as corroborating evidence; do not match on PNR alone.
-Update a uniquely matching transaction or insert a new row when none matches.
-If multiple rows or transactions cannot be distinguished, ask before writing.
+Use at most one row per triage request unless the user explicitly authorizes
+additional rows. Consolidate retries and related Cart IDs in that row's review
+and evidence; do not create a row for each attempt. Use the earliest relevant
+transaction date and primary Cart ID in their dedicated fields, and retain
+the other attempts' dates and Cart IDs in the review.
+Before writing, check existing rows against the primary and related Cart IDs
+and transaction dates, with PNR as corroborating evidence; do not match on PNR
+alone. Update a uniquely matching record rather than adding a duplicate. If
+none matches, fill only the first completely blank record row. If matches are
+ambiguous or that blank row conflicts with chronological order, ask before
+writing; do not populate additional rows automatically.
 Preserve unrelated cells, formulas, formatting, and existing evidence. Do not
 overwrite populated values with missing evidence. Write supplied identifiers
 and diagnostic text as literal cell values, never executable formulas.
