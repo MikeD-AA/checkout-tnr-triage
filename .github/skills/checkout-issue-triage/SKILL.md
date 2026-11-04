@@ -232,6 +232,7 @@ is missing or ambiguous, ask for clarification rather than guessing.
 | PNR | The supplied or verified PNR, preserved as text. This authorized workbook field is an exception to omitting the PNR from the chat report. |
 | Cart ID | The correlated Cart ID, preserved as text. |
 | Purchased | `Yes` for a confirmed purchase; `No` for confirmed non-purchase. An attempted purchase or error alone does not establish the final outcome. If unresolved, leave the value unset and explain in Copilot Review. |
+| Adyen Response at Time of Error | Record the correlated payment authorization result for the failed attempt, preserving the exact response/status. Include any confirmed cancellation or reversal separately. Do not substitute a later retry's result. If unavailable, leave blank and explain in Copilot Review. Map by header title, not column letter. |
 | Offers attempted to Purchase | Ancillaries selected for attempted purchase, not merely displayed offers. Leave blank when evidence establishes no ancillaries were selected; do not treat missing selection evidence as none. |
 | Notes | ERRCODE values verbatim, retaining existing notes when updating a row. |
 | Copilot Review | Concise findings: error sequence, cause/status, occurrence stage, purchase-outcome uncertainty, confidence, and outstanding checks. |
