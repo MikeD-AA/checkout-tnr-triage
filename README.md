@@ -1,8 +1,8 @@
 # checkout-tnr-triage
 
 Manual triage of escalations selected from email or Teams. The output is a
-plain-text record in [triage.txt](triage.txt), with a post-analysis spreadsheet
-update when authorized workbook access is available.
+plain-text record in [triage.txt](triage.txt), with a post-analysis CSV record
+in [triage.csv](triage.csv) for checkout issue triage.
 
 ## Workflow
 
@@ -20,17 +20,12 @@ update when authorized workbook access is available.
 
 For investigations using the
 [checkout issue triage skill](.github/skills/checkout-issue-triage/SKILL.md),
-record completed analysis in the **Master** worksheet of **ERRCODE858
-Triage_Updated 100626**, following the skill's post-analysis spreadsheet mapping.
-Map existing column titles rather than relying on column letters, preserve
-existing records, and verify persisted values. Keep **Master** in ascending
-transaction-date order (oldest to newest): insert earlier transactions in their
-chronological position rather than appending them, keeping complete rows aligned.
-When an available workbook or
-browser tool requires sign-in, prompt the user to sign in directly and confirm
-readiness, preferably after analysis. Never collect credentials or session
-tokens. Verify tool access after sign-in; if unavailable, return proposed values
-and report the blocker rather than claiming an update.
+record completed analysis in the workspace [triage.csv](triage.csv), using its
+specified headers and field mapping. Preserve existing records, update a
+uniquely matching row rather than duplicating it, and verify the written values.
+Keep records in ascending transaction-date order (oldest to newest), inserting
+earlier transactions in their chronological position. This CSV record is
+separate from `triage.txt`; do not append an unreviewed plain-text entry.
 
 ## Required Fields
 

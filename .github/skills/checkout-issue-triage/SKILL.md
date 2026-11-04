@@ -9,8 +9,8 @@ Investigate a GitHub issue using its supplied details and any authorized,
 server-side system integrations available in the execution environment. Return
 an evidence-backed report; do not infer a root cause from an error code alone.
 Do not depend on the user's browser session or ask them to sign in to a system
-for the investigation. The post-analysis workbook update has a separate,
-user-assisted sign-in procedure below; it is not required for log analysis.
+for the investigation. The post-analysis CSV update is separate and is not
+required for log analysis.
 
 ## Inputs
 
@@ -200,43 +200,32 @@ when the source says none occurred, and associate each ERRCODE with its cause,
 status, evidence, and stage. Return the proposed entry for review; do not append
 it to `triage.txt` until the user has reviewed and approved it.
 
-## Post-analysis spreadsheet update
+## Post-analysis CSV update
 
-After completing the analysis, record the findings in the **Master** worksheet
-of **ERRCODE858 Triage_Updated 100626**:
-[SharePoint workbook](https://spteam.aa.com/sites/SBCheckOut/_layouts/15/Doc.aspx?sourcedoc=%7B043af682-6814-464d-8d71-b81f5322b38a%7D&action=edit).
+After completing the analysis, record the findings in the workspace file
+[`triage.csv`](../../../triage.csv). Use this exact header row, mapping values
+by header name:
 
-Use an authorized workbook integration or an available browser automation tool.
-A link alone does not grant access. If workbook sign-in is required, use
-`ask_user` to prompt the user to sign in directly to the workbook and confirm
-when ready. Prefer prompting after analysis, before writing; if prompted during
-triage, do not make workbook access a prerequisite for the analysis.
+```csv
+Transaction date,PNR,Cart ID,Purchased,Adyen Response at Time of Error,Offers attempted to Purchase,Notes,Copilot Review
+```
 
-The user must enter credentials and complete MFA themselves in the browser.
-Never request credentials in chat or extract cookies, tokens, or other session
-material. After confirmation, check that the available tool can actually access
-the intended workbook and **Master** worksheet; signing in to an unrelated
-browser does not grant a tool access automatically.
+The CSV is a local repository record; do not use the former SharePoint
+workbook URL or request a workbook sign-in. If the file is unavailable,
+unreadable, or has missing, duplicated, reordered, or unexpected headers, report
+the blocker and return the proposed field values rather than claiming an update.
+Do not silently replace an existing file or change its schema.
 
-If no suitable tool is available or a read/write fails, report the blocker and
-return the proposed field values instead; do not claim the spreadsheet was
-updated or prompt for a login that cannot enable the available tools.
-
-Read the worksheet headers and map fields by their titles, not hard-coded
-column letters. Confirm the actual header names before writing. If a header
-is missing or ambiguous, ask for clarification rather than guessing.
-
-| Field | Value |
+| Header | Value |
 |---|---|
-| Transaction date | Evidence-backed transaction date, not the analysis date. Respect the worksheet's date format and establish the time zone before converting a timestamp near a date boundary. |
-| PNR | The supplied or verified PNR, preserved as text. This authorized workbook field is an exception to omitting the PNR from the chat report. |
-| Cart ID | The correlated Cart ID, preserved as text. |
-| Purchased | `Yes` for a confirmed purchase; `No` for confirmed non-purchase. An attempted purchase or error alone does not establish the final outcome. If unresolved, leave the value unset and explain in Copilot Review. |
-| Adyen Response at Time of Error | Record the correlated payment authorization result for the failed attempt, preserving the exact response/status. Include any confirmed cancellation or reversal separately. Do not substitute a later retry's result. If unavailable, leave blank and explain in Copilot Review. Map by header title, not column letter. |
+| Transaction date | Evidence-backed transaction date, not the analysis date. Establish the time zone before converting a timestamp near a date boundary; use ISO 8601 consistently. |
+| PNR | The supplied or verified PNR, preserved as text. This authorized CSV field is an exception to omitting the PNR from the chat report. |
+| Cart ID | The correlated primary Cart ID, preserved as text. |
+| Purchased | `Yes` for a confirmed purchase; `No` for confirmed non-purchase. An attempted purchase or error alone does not establish the final outcome. If unresolved, leave the field blank and explain in Copilot Review. |
+| Adyen Response at Time of Error | Record the correlated payment authorization result for the failed attempt, preserving the exact response/status. Include any confirmed cancellation or reversal separately. Do not substitute a later retry's result. If unavailable, leave blank and explain in Copilot Review. |
 | Offers attempted to Purchase | Ancillaries selected for attempted purchase, not merely displayed offers. Leave blank when evidence establishes no ancillaries were selected; do not treat missing selection evidence as none. |
 | Notes | ERRCODE values verbatim, retaining existing notes when updating a row. |
-| Copilot Review | Concise findings: error sequence, cause/status, occurrence stage, purchase-outcome uncertainty, confidence, and outstanding checks. |
-| Logs | Supporting source links or log references and UTC timestamps. State unavailable or incomplete evidence explicitly; do not paste entire log payloads, secrets, or unnecessary personal data. |
+| Copilot Review | Concise findings: error sequence, cause/status, occurrence stage, purchase-outcome uncertainty, confidence, and outstanding checks. Include supporting source links or log references and UTC timestamps; state unavailable or incomplete evidence explicitly. Do not paste entire log payloads, secrets, or unnecessary personal data. |
 
 Use at most one row per triage request unless the user explicitly authorizes
 additional rows. Consolidate retries and related Cart IDs in that row's review
@@ -246,27 +235,21 @@ the other attempts' dates and Cart IDs in the review.
 Before writing, check existing rows against the primary and related Cart IDs
 and transaction dates, with PNR as corroborating evidence; do not match on PNR
 alone. Update a uniquely matching record rather than adding a duplicate. If
-none matches, fill only the first completely blank record row. If matches are
-ambiguous or that blank row conflicts with chronological order, ask before
-writing; do not populate additional rows automatically.
-Preserve unrelated cells, formulas, formatting, and existing evidence. Do not
-overwrite populated values with missing evidence. Write supplied identifiers
-and diagnostic text as literal cell values, never executable formulas.
+none matches, add one record. If matches are ambiguous, ask before writing.
+Preserve unrelated rows and existing evidence; do not overwrite populated
+values with missing evidence. Use a CSV writer or equivalent correct CSV
+escaping so commas, quotes, and line breaks in values do not corrupt the
+record. Keep identifiers and diagnostic text as data, not executable formulas.
 
-Keep **Master** in ascending transaction-date order (oldest to newest), not
-triage-date order. Read the existing transaction dates before choosing the
-insertion point. Insert an earlier transaction before the first later-dated
-entry, after existing entries with the same date; append only when no later
-entry exists. Insert a complete table/worksheet row so every record's columns
-remain aligned; never sort or shift only the date column. If correcting an
-existing transaction date changes its position, move the complete record to
-the proper position while preserving its other values and formulas. If dates
-are missing or ambiguous, the existing order is inconsistent, or the tool
-cannot safely insert/move a complete row, report the blocker and ask before
-writing rather than appending out of order or re-sorting unrelated records.
+Keep records in ascending transaction-date order (oldest to newest), not
+triage-date order. Read existing dates before choosing the insertion point.
+Insert an earlier transaction before the first later-dated entry and after
+existing entries with the same date. If correcting a transaction date changes
+its position, move the complete CSV record. If dates are missing or ambiguous
+or the existing order is inconsistent, report the blocker and ask before
+writing rather than inserting out of order or re-sorting unrelated records.
 
-Read back the written cells and neighboring transaction dates to verify the
-mapped values persisted and chronological order was retained. Report the
-workbook, worksheet, and affected row after verification, without repeating
-the PNR in chat. This spreadsheet step does not authorize appending an
-unreviewed entry to `triage.txt`.
+Read back the written row and neighboring transaction dates to verify values
+and chronological order. Report the CSV file and affected record after
+verification, without repeating the PNR in chat. This CSV step does not
+authorize appending an unreviewed entry to `triage.txt`.
